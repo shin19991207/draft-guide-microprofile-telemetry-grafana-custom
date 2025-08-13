@@ -18,12 +18,14 @@
                   httpsPort="${https.port}"
                   id="defaultHttpEndpoint" host="*" />
 
+    <!-- tag::webApplication[] -->
     <webApplication location="guide-microprofile-telemetry-inventory.war"
                     contextRoot="/">
         <!-- tag::thirdParty[] -->
         <classloader apiTypeVisibility="+third-party"/>
         <!-- end::thirdParty[] -->
     </webApplication>
+    <!-- end::webApplication[] -->
 
     <logging consoleLogLevel="INFO" />
 

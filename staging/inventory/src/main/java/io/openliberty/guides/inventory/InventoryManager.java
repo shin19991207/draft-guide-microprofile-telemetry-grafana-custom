@@ -85,7 +85,7 @@ public class InventoryManager {
 
     // tag::updateWithSpan[]
     @WithSpan("Inventory Manager Update")
-    // tag::updateWithSpan[]
+    // end::updateWithSpan[]
     // tag::updateMethod[]
     // tag::spanAttribute2[]
     public void update(@SpanAttribute("hostname") String host, String health) {

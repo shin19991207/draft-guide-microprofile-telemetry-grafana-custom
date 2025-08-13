@@ -301,7 +301,7 @@ inventory/server.xml
 include::finish/inventory/src/main/liberty/config/server.xml[]
 ----
 
-The OpenTelemetry APIs are exposed as third-party APIs in Open Liberty. To make them accessible to your application, add the [hotspot=thirdParty file=0]`+third-party` value to the [hotspot=thirdParty file=0]`apiTypeVisibility` attribute of the [hotspot=thirdParty file=0]`classLoader` element in the `webApplication` configuration. This configuration adds `third-party` to the default list of API package types that are supported.
+The OpenTelemetry APIs are exposed as third-party APIs in Open Liberty. To make them accessible to your application, add the [hotspot=thirdParty file=0]`+third-party` value to the [hotspot=thirdParty file=0]`apiTypeVisibility` attribute of the [hotspot=thirdParty file=0]`classLoader` element in the [hotspot=webApplication file=0]`webApplication` configuration. This configuration adds `third-party` to the default list of API package types that are supported.
 
 === Enabling tracing in Jakarta CDI beans
 
