@@ -384,17 +384,9 @@ image::inventory_cannot_get_properties_event.png[Inventory Manager Cannot get pr
 
 In addition to the runtime metrics automatically collected with MicroProfile Telemetry, you can define custom metrics in your application by using the OpenTelemetry API.
 
-inventory/server.xml
-[source, xml, linenums, role='code_column']
-----
-include::finish/inventory/src/main/liberty/config/server.xml[]
-----
-
-Becuase you already make third-party APIs visible in the previous section in the inventory's [hotspot=thirdParty file=0]`server.xml` configuration, you have access to the OpenTelemetry API.
-
 You can manually instrument your application to define custom metrics.
 
-[role="code_command hotspot file=1", subs="quotes"]
+[role="code_command hotspot file=0", subs="quotes"]
 ----
 #Replace the HealthCheckScheduler class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/HealthCheckScheduler.java`
@@ -406,13 +398,13 @@ HealthCheckScheduler.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/HealthCheckScheduler.java[]
 ----
 
-Inject the OpenTelemetry [hotspot=meter file=1]`Meter` interface into the [hotspot file=1]`HealthCheckScheduler` class to define and collect application-specific metrics. This interface provides access to the OpenTelemetry metrics API, including instruments such as counters, histograms, and gauges to monitor application behavior and performance.
+Inject the OpenTelemetry [hotspot=meter file=0]`Meter` interface into the [hotspot file=0]`HealthCheckScheduler` class to define and collect application-specific metrics. This interface provides access to the OpenTelemetry metrics API, including instruments such as counters, histograms, and gauges to monitor application behavior and performance.
 
-Use the [hotspot=counterBuilder file=1]`Meter.counterBuilder()` method to define a counter instrument named [hotspot=schedulerRunCounter file=1]`inventory.health.check.scheduler.runs`. This metric records the total number of health check scheduler executions over time.
+Use the [hotspot=counterBuilder file=0]`Meter.counterBuilder()` method to define a counter instrument named [hotspot=schedulerRunCounter file=0]`inventory.health.check.scheduler.runs`. This metric records the total number of health check scheduler executions over time.
 
-Use the [hotspot=histogramBuilder file=1]`Meter.histogramBuilder()` method to define a histogram instrument named [hotspot=schedulerDuration file=1]`inventory.health.check.scheduler.duration`. This metric measures the time taken for each scheduled health check run. The [hotspot=start file=1]`start` time is captured when the [hotspot=performHealthChecks file=1]`performHealthChecks()` method begins, and the [hotspot=duration file=1]`duration` is calculated and recorded when the run completes.
+Use the [hotspot=histogramBuilder file=0]`Meter.histogramBuilder()` method to define a histogram instrument named [hotspot=schedulerDuration file=0]`inventory.health.check.scheduler.duration`. This metric measures the time taken for each scheduled health check run. The [hotspot=start file=0]`start` time is captured when the [hotspot=performHealthChecks file=0]`performHealthChecks()` method begins, and the [hotspot=duration file=0]`duration` is calculated and recorded when the run completes.
 
-[role="code_command hotspot file=2", subs="quotes"]
+[role="code_command hotspot file=1", subs="quotes"]
 ----
 #Replace the InventoryManager class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java`
@@ -424,7 +416,7 @@ InventoryManager.java
 include::finish/inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java[]
 ----
 
-Inject the OpenTelemetry [hotspot=meter file=2]`Meter` interface and use the [hotspot=gaugeBuilder file=2]`Meter.gaugeBuilder()` method to define a gauge named [hotspot=inventorySize file=2]`inventory.size`. This metric reports the current number of systems in the inventory. The [hotspot=buildWithCallback file=2]`buildWithCallback()` method updates the gauge dynamically so that it always reflects the latest inventory size.
+Inject the OpenTelemetry [hotspot=meter file=1]`Meter` interface and use the [hotspot=gaugeBuilder file=1]`Meter.gaugeBuilder()` method to define a gauge named [hotspot=inventorySize file=1]`inventory.size`. This metric reports the current number of systems in the inventory. The [hotspot=buildWithCallback file=1]`buildWithCallback()` method updates the gauge dynamically so that it always reflects the latest inventory size.
 
 When naming metrics, follow OpenTelemetry's https://opentelemetry.io/docs/specs/semconv/general/metrics/[general naming guidelines] to ensure compatibility. 
 
@@ -445,7 +437,6 @@ OpenTelemetry metrics are sent every 60 seconds by default, so it may take up to
 You will see a result similar to the following:
 
 image::inventory_custom_metrics.png[Inventory custom metrics,align="center"]
-{empty} +
 
 Note the difference between the metric name you define and the name displayed in Grafana. For details on how OpenTelemetry metrics are transformed when exported to Prometheus, see the https://opentelemetry.io/docs/specs/otel/compatibility/prometheus_and_openmetrics/#otlp-metric-points-to-prometheus[OTLP Metric points to Prometheus^] section of the OpenTelemetry specification.
 
