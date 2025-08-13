@@ -38,7 +38,7 @@ Automatic instrumentation in MicroProfile Telemetry makes it easy to capture tra
 
 Manual instrumentation lets you add custom spans and metrics directly to your code. These custom signals are collected alongside the automatically captured data, allowing you to view and analyze everything together in the same observability backend.
 
-In this guide, you'll learn how to add manual instrumentation to your microservices by creating ccustom spans in traces and custom metrics to extend the default telemetry. You'll use the https://github.com/grafana/docker-otel-lgtm/?tab=readme-ov-file#docker-otel-lgtm[Grafana Docker OpenTelemetry LGTM^] image, a preconfigured OpenTelemetry observability backend based on the https://grafana.com/about/grafana-stack/[Grafana stack^].
+In this guide, you'll learn how to add manual instrumentation to your microservices by creating custom spans in traces and custom metrics to extend the default telemetry. You'll use the https://github.com/grafana/docker-otel-lgtm/?tab=readme-ov-file#docker-otel-lgtm[Grafana Docker OpenTelemetry LGTM^] image, a preconfigured OpenTelemetry observability backend based on the https://grafana.com/about/grafana-stack/[Grafana stack^].
 
 This guide builds on the https://openliberty.io/guides/microprofile-telemetry-grafana-automatic.html[Enabling observability in microservices with traces, metrics, and logs using OpenTelemetry and Grafana^] guide. If you are not familiar with enabling automatic telemetry collection, it will be helpful to read that guide before you proceed.
 
@@ -175,7 +175,6 @@ image::inventory_node_graph.png[`GET /inventory/systems/{hostname}` node graph,a
 
 To view the metrics in Grafana, go to **Drilldown -> Metrics** from the left-hand menu. In the **Filters** section, set `service_name = inventory` to view metrics for the inventory service only.
 
-+
 image::inventory_metrics.png[Metrics overview,align="center"]
 
 {empty} +
@@ -218,7 +217,7 @@ mvnw.cmd -pl inventory liberty:stop
 
 MicroProfile Telemetry automatically instruments Jakarta RESTful Web Services and MicroProfile REST clients. To trace additional operations, such as internal logic or calls to external systems like database, you can add manual instrumentation to the source code.
 
-Start the services to begin collecting telemetry data.
+Navigate to the `start` directory and start the services to begin collecting telemetry data.
 
 When you run Open Liberty in https://openliberty.io/docs/latest/development-mode.html[dev mode^], dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following command to start the `system` service in dev mode:
 
@@ -308,7 +307,7 @@ The OpenTelemetry APIs are exposed as third-party APIs in Open Liberty. To make 
 
 Now you can trace your Jakarta CDI beans by annotating a method with the `@WithSpan` annotation.
 
-[role="code_command hotspot file=1", subs="quotes"]
+[role="code_command hotspot file=0", subs="quotes"]
 ----
 #Replace the `InventoryManager` class.#
 `inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java`
@@ -320,23 +319,23 @@ InventoryManager.java
 include::staging/inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java[]
 ----
 
-The [hotspot=listMethod file=1]`list()`, [hotspot=addMethod file=1]`add()`, and [hotspot=updateMethod file=1]`update()` methods are annotated with the [hotspot=addWithSpan hotspot=listWithSpan hotspot=updateWithSpan file=1]`@WithSpan` annotation. The [hotspot=listMethod file=1]`list()` method uses its method name as the default span name, while the [hotspot=addMethod file=1]`add()` and [hotspot=updateMethod file=1]`update()` methods define custom span names, [hotspot=addWithSpan file=1]`Inventory Manager Add` and [hotspot=updateWithSpan file=1]`Inventory Manager Update`, respectively. Each time one of these methods is invoked, the instrumentation automatically creates a new span.
+The [hotspot=listMethod file=0]`list()`, [hotspot=addMethod file=0]`add()`, and [hotspot=updateMethod file=0]`update()` methods are annotated with the [hotspot=addWithSpan hotspot=listWithSpan hotspot=updateWithSpan file=0]`@WithSpan` annotation. The [hotspot=listMethod file=0]`list()` method uses its method name as the default span name, while the [hotspot=addMethod file=0]`add()` and [hotspot=updateMethod file=0]`update()` methods define custom span names, [hotspot=addWithSpan file=0]`Inventory Manager Add` and [hotspot=updateWithSpan file=0]`Inventory Manager Update`, respectively. Each time one of these methods is invoked, the instrumentation automatically creates a new span.
 
-To enrich spans with additional context, you can annotate method parameters with the [hotspot=spanAttribute1 hotspot=spanAttribute2 file=1]`@SpanAttribute` annotation. In this example, the `host` parameter in the [hotspot=addMethod file=1]`add()` and [hotspot=updateMethod file=1]`update()` methods is labeled as [hotspot=spanAttribute1 hotspot=spanAttribute2 file=1]`hostname` in the span.
+To enrich spans with additional context, you can annotate method parameters with the [hotspot=spanAttribute1 hotspot=spanAttribute2 file=0]`@SpanAttribute` annotation. In this example, the `host` parameter in the [hotspot=addMethod file=0]`add()` and [hotspot=updateMethod file=0]`update()` methods is labeled as [hotspot=spanAttribute1 hotspot=spanAttribute2 file=0]`hostname` in the span.
 
 You can now view the traces generated by the `@WithSpan` annotation. Open the http://localhost:9081/inventory/systems URL in your browser to trigger a trace, then open the Grafana dashboard at the http://localhost:3000 URL. In the **Explore** view, select **Tempo** as the data source, set **Query type** to `Search`, and click **Run query**. Select a trace ID with the `GET /inventory/systems` name that you just generated. You'll see the result as:
 
 image::inventory_manager_list_span.png[Spans generated when visiting `GET /inventory/systems`,align="center"]
 {empty} +
 
-Verify that there are two spans from the `inventory` service. Expand each span to view its details. You'll see the `InventoryManager.list` span that is created by the [hotspot=listWithSpan file=1]`@WithSpan` annotation.
+Verify that there are two spans from the `inventory` service. Expand each span to view its details. You'll see the `InventoryManager.list` span that is created by the [hotspot=listWithSpan file=0]`@WithSpan` annotation.
 
 To check out the information generated by the `@SpanAttribute` annotation, visit the http://localhost:9081/inventory/systems/localhost URL, then re-run your Grafana query. Select a trace ID with the `GET /inventory/systems/{hostname}` name that you just generated. You will see the following result:
 
 image::inventory_service_6_spans.png[Spans generated when visiting `GET /inventory/systems/{hostname}`,align="center"]
 {empty} +
 
-Verify that there are four spans from the `inventory` service and two spans from the `system` service. Expand the `Inventory Manager Add` span and its **Span Attributes** field. You can see the `hostname` attribute with the `localhost` value that is created by the [hotspot=spanAttribute1 file=1]`@SpanAttribute` annotation.
+Verify that there are four spans from the `inventory` service and two spans from the `system` service. Expand the `Inventory Manager Add` span and its **Span Attributes** field. You can see the `hostname` attribute with the `localhost` value that is created by the [hotspot=spanAttribute1 file=0]`@SpanAttribute` annotation.
 
 image::inventory_manager_add_spanattribute.png[Inventory Manager Add span attribute,align="center"]
 
