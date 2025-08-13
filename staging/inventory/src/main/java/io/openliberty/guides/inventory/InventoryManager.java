@@ -22,7 +22,7 @@ import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import io.opentelemetry.api.metrics.Meter;
+import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 
@@ -38,25 +38,6 @@ public class InventoryManager {
     private int SYSTEM_PORT;
 
     private Map<String, SystemData> systems = new ConcurrentHashMap<>();
-
-    // tag::meter[]
-    @Inject
-    Meter meter;
-    // end::meter[]
-
-    @PostConstruct
-    public void init() {
-        // tag::gaugeBuilder[]
-        // tag::inventorySize[]
-        meter.gaugeBuilder("inventory.size")
-        // end::inventorySize[]
-            .setDescription("Number of systems in the inventory")
-            .setUnit("1")
-            // tag::buildWithCallback[]
-            .buildWithCallback(g -> g.record((double) systems.size()));
-            // end::buildWithCallback[]
-        // end::gaugeBuilder[]
-    }
 
     public boolean contains(String host) {
         return systems.containsKey(host);
