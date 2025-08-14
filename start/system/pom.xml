@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.openliberty.tools</groupId>
-    <artifactId>guide-microprofile-telemetry-system</artifactId>
+    <artifactId>guide-microprofile-telemetry-grafana-custom-system</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 

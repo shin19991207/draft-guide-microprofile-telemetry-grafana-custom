@@ -19,7 +19,7 @@
                   httpsPort="${https.port}"
                   id="defaultHttpEndpoint" host="*" />
 
-    <webApplication location="guide-microprofile-telemetry-system.war"
+    <webApplication location="guide-microprofile-telemetry-grafana-custom-system.war"
                     contextRoot="/" />
 
     <logging consoleLogLevel="INFO" />
