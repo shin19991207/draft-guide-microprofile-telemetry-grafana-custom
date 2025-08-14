@@ -60,7 +60,7 @@ public class HealthCheckScheduler {
                 .setDescription("Duration of scheduled health check runs")
                 .setUnit("s")
                 .build();
-        // end:histogramBuilder[]
+        // end::histogramBuilder[]
     }
     
     @Schedule(hour = "*", minute = "*", second = "*/30", persistent = false)
